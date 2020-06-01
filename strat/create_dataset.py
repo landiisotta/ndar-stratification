@@ -70,9 +70,10 @@ def prepare_imputation(df, missing_perc=0.35):
     df_rid.insert(0, 'countna', list(d_subj.values()))
     logging.info(f'Percentage of missing information for each feature:\n'
                  f'{d_feat}\n'
-                 f'Average - Min/Max percentage of missing informtion per subject:'
+                 f'Average - Min/Max percentage of missing information per subject:'
                  f'{np.mean(list(d_subj.values()))} - {min(d_subj.values())}/{max(d_subj.values())}')
     logging.info(f'Threshold set at: {missing_perc}')
+    df_rid.reset_index(inplace=True)
     idxtodrop = [idx for idx in df_rid.index.tolist() if d_subj[idx] > missing_perc]
     df_rid.drop(idxtodrop, axis=0, inplace=True)
     df_rid.sort_values(['subjectkey', 'interview_period'], inplace=True)
@@ -108,9 +109,9 @@ def _check_na_perc(df):
     na_feat = {col: (df[[col]].isna().astype(int).sum().tolist()[0] / nobs)
                for col in cols}
     # Feat-wise
-    df.reset_index(inplace=True)
-    na_subj = {int(idx): (df[cols].loc[idx].isna().astype(int).sum() / nfeat)
-               for idx in df.index.tolist()}
+    df_cp = df.reset_index().copy()
+    na_subj = {int(idx): (df_cp[cols].iloc[idx].isna().astype(int).sum() / nfeat)
+               for idx in df_cp.index.tolist()}
     return na_feat, na_subj
 
 

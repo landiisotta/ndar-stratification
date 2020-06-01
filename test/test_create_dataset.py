@@ -12,7 +12,7 @@ class TestCreateDataset(unittest.TestCase):
     def setUp(cls):
         name_df = {'vineland1': 'toy_dataset.txt'}
         cls.instrument_file_name = name_df
-        cls.pheno_file_name = 'toy_demoinfo.txt'
+        cls.pheno_file_name = '../data/toy_demoinfo.txt'
         cls.phenotype = 'autism'
         cls.readdata = ReadData(cls.instrument_file_name, cls.pheno_file_name, cls.phenotype)
 
@@ -76,7 +76,7 @@ class TestCreateDataset(unittest.TestCase):
     def test_dataset(self):
         name_df = {'vineland1': 'toy_dataset.txt',
                    'vineland2': 'toy_dataset.txt'}
-        df, demodict = create_dataset.dataset(name_df, 'toy_demoinfo.txt',
+        df, demodict = create_dataset.dataset(name_df, '../data/toy_demoinfo.txt',
                                               ptype=1,
                                               save=False, phenotype='autism')
         self.assertEqual(sorted(['gui2', 'gui3', 'gui5', 'gui7', 'gui9', 'gui14', 'gui16',
@@ -88,7 +88,7 @@ class TestCreateDataset(unittest.TestCase):
     def test_prepare_imputation(self):
         name_df = {'vineland1': 'toy_dataset.txt',
                    'vineland2': 'toy_dataset.txt'}
-        df, _ = create_dataset.dataset(name_df, 'toy_demoinfo.txt',
+        df, _ = create_dataset.dataset(name_df, '../data/toy_demoinfo.txt',
                                        ptype=1,
                                        save=False, phenotype='autism')
         df_rid1 = create_dataset.prepare_imputation(df, 0.05)
@@ -101,7 +101,7 @@ class TestCreateDataset(unittest.TestCase):
     def test_check_na_perc(self):
         name_df = {'vineland1': 'toy_dataset.txt',
                    'vineland2': 'toy_dataset.txt'}
-        df, _ = create_dataset.dataset(name_df, 'toy_demoinfo.txt',
+        df, _ = create_dataset.dataset(name_df, '../data/toy_demoinfo.txt',
                                        ptype=1,
                                        save=False, phenotype='autism')
         na_feat, na_subj = create_dataset._check_na_perc(df)

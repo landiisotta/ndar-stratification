@@ -14,7 +14,8 @@ class TestRunRCV(unittest.TestCase):
 
     def test_prepare_cs_dataset(self):
         name_df = {'vineland1': 'toy_dataset.txt'}
-        df, _ = dataset(name_df, 'toy_demoinfo.txt',
+        df, _ = dataset(name_df, '../data/toy_demoinfo.txt',
+                        ptype=self.ptype,
                         save=False, phenotype='autism')
         df_rid = prepare_imputation(df, 0.5)
         dict_tr, dict_ts = self.run_rcv.prepare_cs_dataset(df_rid)
@@ -25,19 +26,22 @@ class TestRunRCV(unittest.TestCase):
                          [list(self.include_age)] * 2)
 
     def test_gridsearch_cv(self):
-        df = pd.read_csv('../data/toy_gridsearch.txt',
+        df = pd.read_csv('/Users/ilandi/PycharmProjects/ndar-stratification/data/toy_gridsearch.txt',
                          delimiter='\t',
                          header=0,
                          low_memory=False,
                          index_col='subjectkey')
-        self.run_rcv.gridsearch_cv(df, (5, 7), (0.40, 0.50), (2, 4),
-                                   save='toy_gsearch')
+        score_out, score_df = self.run_rcv.gridsearch_cv(df, (5, 7), (0.40, 0.50), (2, 4),
+                                                         (2, 3))
+        self.assertIsInstance(score_out, dict)
+        self.assertIsInstance(score_df, pd.DataFrame)
 
     def test_run_rcv(self):
-        df = pd.read_csv('../data/toy_gridsearch.txt',
+        df = pd.read_csv('/Users/ilandi/PycharmProjects/ndar-stratification/data/toy_gridsearch.txt',
                          delimiter='\t',
                          header=0,
                          low_memory=False,
                          index_col='subjectkey')
-        self.run_rcv.run_rcv(df, 0.40, 5, 2, (2, 4), scatter=True, heatmap=True)
-
+        dict_imp = self.run_rcv.run_rcv(df, 0.40, 5, 2, (2, 4),
+                                        scatter=True, heatmap=True)
+        self.assertIsInstance(dict_imp, dict)
